@@ -2,10 +2,12 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../utils/app_colors.dart';
 import '../widget/inputtitle.dart';
 import '../widget/screenTitle.dart';
+import 'customer_info.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -112,185 +114,78 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            ScreenTitle(
-              title: 'Reservation Details',
-            ),
-            SizedBox(
-              height: 10.h,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  InputTitle(
-                    title: 'Reservation ID',
-                    isrequried: true,
-                  ),
-                  SizedBox(
-                    height: 5.h,
-                  ),
-                  SizedBox(
-                    height: 35.h,
-                    child: TextFormField(
-                      controller: reservation_id,
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(7.0),
-                          borderSide: BorderSide(
-                            color: AppColors.primarycolor,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(7.0),
-                          borderSide: BorderSide(
-                            color: Colors.grey.shade300,
-                            width: 2.0,
-                          ),
-                        ),
-                      ),
-                      validator: (String? value) {
-                        if (value?.isEmpty ?? true) {
-                          return 'Enter your Reservation Id';
-                        }
-                        return null;
-                      },
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              ScreenTitle(
+                title: 'Reservation Details',
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InputTitle(
+                      title: 'Reservation ID',
+                      isrequried: true,
                     ),
-                  ),
-                  SizedBox(height: 15.h,),
-                  InputTitle(
-                    title: 'Pickup Date',
-                    isrequried: true,
-                  ),
-                  SizedBox(
-                    height: 5.h,
-                  ),
-
-                  //taking pickup date time with bottomSheet
-
-                  InkWell(
-                    onTap: () => showModalBottomSheet(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return Container(
-                            height: 150.h,
-                            padding: EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Select Pickup Date & Time',
-                                  style: TextStyle(fontSize: 15.sp),
-                                ),
-                                SizedBox(
-                                  height: 10.h,
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: InkWell(
-                                        onTap: () => _selectPickupDate(context),
-                                        child: InputDecorator(
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(),
-                                            hintText: 'Select Date',
-                                          ),
-                                          child: Text(
-                                            DateFormat('yyyy-MM-dd')
-                                                .format(_pickupDateTime),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 15.w,),
-                                    Expanded(
-                                      child: InkWell(
-                                        onTap: () => _selectPickupTime(context),
-                                        child: InputDecorator(
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(),
-                                            hintText: 'Select Time',
-                                          ),
-                                          child: Text(
-                                            DateFormat('HH:mm')
-                                                .format(_pickupDateTime),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
-                    child: SizedBox(
+                    SizedBox(
+                      height: 5.h,
+                    ),
+                    SizedBox(
                       height: 35.h,
-                      child: Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: 10.w,
+                      child: TextFormField(
+                        controller: reservation_id,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7.0),
+                            borderSide: BorderSide(
+                              color: AppColors.primarycolor,
                             ),
-                            selectedpickup
-                                ? Text(
-                                    DateFormat('yyyy-MM-dd, HH:MM')
-                                        .format(_pickupDateTime),
-                                    style: TextStyle(color: Colors.grey),
-                                  )
-                                : Text(
-                                    'Select Day and Time',
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                            Spacer(),
-                            Icon(
-                              Icons.calendar_today,
-                              color: Colors.grey.shade400,
-                            )
-                          ],
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7.0),
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade300,
+                              width: 2.0,
+                            ),
+                          ),
                         ),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(7),
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300)),
+                        validator: (String? value) {
+                          if (value?.isEmpty ?? true) {
+                            return 'Enter your Reservation Id';
+                          }
+                          return null;
+                        },
                       ),
                     ),
-                  ),
-
-                  //end pickup date
-
-                  SizedBox(height: 15.h,),
-                  // return date start
-
-                  InputTitle(
-                    title: 'Returen Date',
-                    isrequried: true,
-                  ),
-                  SizedBox(
-                    height: 5.h,
-                  ),
-
-                  //taking return date time with bottomSheet
-
-                  InkWell(
-                    onTap: () => showModalBottomSheet(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return Container(
-                            height: 150.h,
-                            padding: EdgeInsets.all(16.0),
-                            child: StatefulBuilder(builder:
-                                (BuildContext context, StateSetter setState) {
-                              return Column(
+                    SizedBox(height: 15.h,),
+                    InputTitle(
+                      title: 'Pickup Date',
+                      isrequried: true,
+                    ),
+                    SizedBox(
+                      height: 5.h,
+                    ),
+          
+                    //taking pickup date time with bottomSheet
+          
+                    InkWell(
+                      onTap: () => showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Container(
+                              height: 150.h,
+                              padding: EdgeInsets.all(16.0),
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Select Return Date & Time',
+                                    'Select Pickup Date & Time',
                                     style: TextStyle(fontSize: 15.sp),
                                   ),
                                   SizedBox(
@@ -300,8 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     children: [
                                       Expanded(
                                         child: InkWell(
-                                          onTap: () =>
-                                              _selectReturnDate(context),
+                                          onTap: () => _selectPickupDate(context),
                                           child: InputDecorator(
                                             decoration: InputDecoration(
                                               border: OutlineInputBorder(),
@@ -309,16 +203,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                             child: Text(
                                               DateFormat('yyyy-MM-dd')
-                                                  .format(_returnDateTime),
+                                                  .format(_pickupDateTime),
                                             ),
                                           ),
                                         ),
                                       ),
-                                      SizedBox(width: 10),
+                                      SizedBox(width: 15.w,),
                                       Expanded(
                                         child: InkWell(
-                                          onTap: () =>
-                                              _selectPickupTime(context),
+                                          onTap: () => _selectPickupTime(context),
                                           child: InputDecorator(
                                             decoration: InputDecoration(
                                               border: OutlineInputBorder(),
@@ -326,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                             child: Text(
                                               DateFormat('HH:mm')
-                                                  .format(_returnDateTime),
+                                                  .format(_pickupDateTime),
                                             ),
                                           ),
                                         ),
@@ -334,121 +227,236 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ],
                                   ),
                                 ],
-                              );
-                            }),
-                          );
-                        }),
-                    child: SizedBox(
-                      height: 35.h,
-                      child: Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: 10.w,
-                            ),
-                            selectedreturn
-                                ? Text(
-                                    DateFormat('yyyy-MM-dd, HH:MM')
-                                        .format(_returnDateTime),
-                                    style: TextStyle(color: Colors.grey),
-                                  )
-                                : Text(
-                                    'Select Day and Time',
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                            Spacer(),
-                            Icon(
-                              Icons.calendar_today,
-                              color: Colors.grey.shade400,
-                            )
-                          ],
+                              ),
+                            );
+                          }),
+                      child: SizedBox(
+                        height: 35.h,
+                        child: Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: 10.w,
+                              ),
+                              selectedpickup
+                                  ? Text(
+                                      DateFormat('yyyy-MM-dd, HH:MM')
+                                          .format(_pickupDateTime),
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  : Text(
+                                      'Select Day and Time',
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                              Spacer(),
+                              Icon(
+                                Icons.calendar_today,
+                                color: Colors.grey.shade400,
+                              )
+                            ],
+                          ),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(7),
+                              border: Border.all(
+                                  width: 1, color: Colors.grey.shade300)),
                         ),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(7),
-                            border: Border.all(
-                                width: 1, color: Colors.grey.shade300)),
                       ),
                     ),
-                  ),
-
-                  //end pickup date
-                  SizedBox(height: 20),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      InputTitle(title: 'Duration', isrequried: false,),
-                     Spacer(),
-                     Container(
-                       child:  Center(
-                         child: Text(_durationText,
-                             style:
-                             TextStyle(fontSize: 12.sp,color: Colors.grey)),
+          
+                    //end pickup date
+          
+                    SizedBox(height: 15.h,),
+                    // return date start
+          
+                    InputTitle(
+                      title: 'Returen Date',
+                      isrequried: true,
+                    ),
+                    SizedBox(
+                      height: 5.h,
+                    ),
+          
+                    //taking return date time with bottomSheet
+          
+                    InkWell(
+                      onTap: () => showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Container(
+                              height: 150.h,
+                              padding: EdgeInsets.all(16.0),
+                              child: StatefulBuilder(builder:
+                                  (BuildContext context, StateSetter setState) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Select Return Date & Time',
+                                      style: TextStyle(fontSize: 15.sp),
+                                    ),
+                                    SizedBox(
+                                      height: 10.h,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: InkWell(
+                                            onTap: () =>
+                                                _selectReturnDate(context),
+                                            child: InputDecorator(
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                hintText: 'Select Date',
+                                              ),
+                                              child: Text(
+                                                DateFormat('yyyy-MM-dd')
+                                                    .format(_returnDateTime),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Expanded(
+                                          child: InkWell(
+                                            onTap: () =>
+                                                _selectPickupTime(context),
+                                            child: InputDecorator(
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                hintText: 'Select Time',
+                                              ),
+                                              child: Text(
+                                                DateFormat('HH:mm')
+                                                    .format(_returnDateTime),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              }),
+                            );
+                          }),
+                      child: SizedBox(
+                        height: 35.h,
+                        child: Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: 10.w,
+                              ),
+                              selectedreturn
+                                  ? Text(
+                                      DateFormat('yyyy-MM-dd, HH:MM')
+                                          .format(_returnDateTime),
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  : Text(
+                                      'Select Day and Time',
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                              Spacer(),
+                              Icon(
+                                Icons.calendar_today,
+                                color: Colors.grey.shade400,
+                              )
+                            ],
+                          ),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(7),
+                              border: Border.all(
+                                  width: 1, color: Colors.grey.shade300)),
+                        ),
+                      ),
+                    ),
+          
+                    //end pickup date
+                    SizedBox(height: 20),
+          
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InputTitle(title: 'Duration', isrequried: false,),
+                       Spacer(),
+                       Container(
+                         child:  Center(
+                           child: Text(_durationText,
+                               style:
+                               TextStyle(fontSize: 12.sp,color: Colors.grey)),
+                         ),
+                         height: 30.h,
+                         width: 200.w,
+                         decoration: BoxDecoration(
+                             color: Colors.white,
+                             borderRadius: BorderRadius.circular(7),
+                             border: Border.all(
+                                 width: 1, color: Colors.grey.shade300)),
+          
                        ),
-                       height: 30.h,
-                       width: 200.w,
-                       decoration: BoxDecoration(
-                           color: Colors.white,
-                           borderRadius: BorderRadius.circular(7),
-                           border: Border.all(
-                               width: 1, color: Colors.grey.shade300)),
-
-                     ),
-                      Spacer(),
-                    ],
-                  ),
-
-                  SizedBox(height: 15.h,),
-
-                  InputTitle(
-                    title: 'Discount',
-                    isrequried: false,
-                  ),
-                  SizedBox(
-                    height: 5.h,
-                  ),
-                  SizedBox(
-                    height: 35.h,
-                    child: TextFormField(
-                      controller: reservation_id,
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(7.0),
-                          borderSide: BorderSide(
-                            color: AppColors.primarycolor,
+                        Spacer(),
+                      ],
+                    ),
+          
+                    SizedBox(height: 15.h,),
+          
+                    InputTitle(
+                      title: 'Discount',
+                      isrequried: false,
+                    ),
+                    SizedBox(
+                      height: 5.h,
+                    ),
+                    SizedBox(
+                      height: 35.h,
+                      child: TextFormField(
+                        controller: reservation_id,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7.0),
+                            borderSide: BorderSide(
+                              color: AppColors.primarycolor,
+                            ),
                           ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(7.0),
-                          borderSide: BorderSide(
-                            color: Colors.grey.shade300,
-                            width: 2.0,
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7.0),
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade300,
+                              width: 2.0,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 20.h,
-                  ),
-                  
-                  Center(
-                    child: SizedBox(
-                        height: 30.h,
-                        width: 150.w,
-                        child: ElevatedButton(onPressed: (){}, child: Text('Next'))),
-                  )
-
-
-                ],
-              ),
-            )
-          ],
+                    SizedBox(
+                      height: 100.h,
+                    ),
+          
+                    
+                    Center(
+                      child: SizedBox(
+                          height: 30.h,
+                          width: 150.w,
+                          child: ElevatedButton(onPressed: (){
+                            Get.to(Customer_Information());
+                          }, child: Text('Next'))),
+                    )
+          
+          
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
+
     );
   }
 }
