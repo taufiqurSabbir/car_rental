@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:taufiq_car_rental/view/utils/app_colors.dart';
 
+import '../widget/BorderContiner.dart';
 import '../widget/screenTitle.dart';
 import 'Summary.dart';
 
@@ -53,11 +54,7 @@ class _AdditionalChargeState extends State<AdditionalCharge> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 15, right: 15),
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(width: 1,color: AppColors.primarycolor.withOpacity(0.25)),
-                  borderRadius: BorderRadius.circular(5)
-                ),
+              child: borderContiner(
                 child: Column(
                   children: options.asMap().entries.map((entry) {
                     int index = entry.key;
