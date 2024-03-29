@@ -1,9 +1,15 @@
+import 'dart:developer';
+
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../Model/customerModel.dart';
 import '../../Model/reservation_model.dart';
+import '../../controller/car_controller.dart';
+import '../../controller/car_type_controller.dart';
+import '../../data/utils/urls.dart';
 import '../utils/app_colors.dart';
 import '../widget/BorderContiner.dart';
 import '../widget/inputtitle.dart';
@@ -11,7 +17,9 @@ import '../widget/screenTitle.dart';
 import 'AdditionalCharge.dart';
 
 class VechicleInfo extends StatefulWidget {
-  const VechicleInfo({Key? key, required this.reservationList, required this.customerInfo}) : super(key: key);
+  const VechicleInfo(
+      {Key? key, required this.reservationList, required this.customerInfo})
+      : super(key: key);
 
   final List<ReservationModel> reservationList;
   final List<CustomerInfo> customerInfo;
@@ -21,6 +29,20 @@ class VechicleInfo extends StatefulWidget {
 }
 
 class _VechicleInfoState extends State<VechicleInfo> {
+  CarTypeController carTypeController = Get.put(CarTypeController());
+  CarController carController = Get.put(CarController());
+  final TextEditingController modelController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    carTypeController.fetchCarData();
+    carController.fetchCarData();
+    log(carController.cardata.toString());
+  }
+
+  String selectedVehicleType = '';
+  late List<String> vehicleTypes;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,8 +78,8 @@ class _VechicleInfoState extends State<VechicleInfo> {
                   children: [
                     borderContiner(
                       child: Padding(
-                        padding:
-                            const EdgeInsets.only(top: 20, left: 15.0, right: 15),
+                        padding: const EdgeInsets.only(
+                            top: 20, left: 15.0, right: 15),
                         child: Column(
                           children: [
                             // Vehicle Type input section start
@@ -69,34 +91,70 @@ class _VechicleInfoState extends State<VechicleInfo> {
                             SizedBox(
                               height: 5.h,
                             ),
-                            SizedBox(
-                              height: 35.h,
-                              child: TextFormField(
-                                keyboardType: TextInputType.text,
-                                decoration: InputDecoration(
-
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(7.0),
-                                    borderSide: BorderSide(
-                                      color: AppColors.primarycolor,
+                            GetBuilder<CarTypeController>(
+                              builder: (controller) {
+                                return SizedBox(
+                                  height: 35.h,
+                                  child: DropdownButtonFormField2<String>(
+                                    isExpanded: true,
+                                    decoration: InputDecoration(
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 16),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                    ),
+                                    items: controller.carTypes
+                                        .map((item) => DropdownMenuItem<String>(
+                                              value: item,
+                                              child: Text(
+                                                item,
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ))
+                                        .toList(),
+                                    validator: (value) {
+                                      if (value == null) {
+                                        return 'Please select type';
+                                      }
+                                      return null;
+                                    },
+                                    onChanged: (value) {
+                                      selectedVehicleType = value.toString();
+                                      setState(() {
+                                        selectedVehicleType = value ?? '';
+                                      });
+                                      print(
+                                          'selected typeee ===== ${selectedVehicleType}');
+                                    },
+                                    onSaved: (value) {},
+                                    buttonStyleData: const ButtonStyleData(
+                                      padding: EdgeInsets.only(right: 8),
+                                    ),
+                                    iconStyleData: const IconStyleData(
+                                      icon: Icon(
+                                        Icons.arrow_drop_down,
+                                        color: Colors.black45,
+                                      ),
+                                      iconSize: 24,
+                                    ),
+                                    dropdownStyleData: DropdownStyleData(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    menuItemStyleData: const MenuItemStyleData(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 16),
                                     ),
                                   ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(7.0),
-                                    borderSide: BorderSide(
-                                      color: Colors.grey.shade300,
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                ),
-                                validator: (String? value) {
-                                  if (value?.isEmpty ?? true) {
-                                    return 'Enter your Reservation Id';
-                                  }
-                                  return null;
-                                },
-                              ),
+                                );
+                              },
                             ),
+
                             SizedBox(
                               height: 15.h,
                             ),
@@ -115,9 +173,16 @@ class _VechicleInfoState extends State<VechicleInfo> {
                             SizedBox(
                               height: 35.h,
                               child: TextFormField(
+                                onSaved: (value) {
+                                  modelController.text = value!;
+                                },
+                                controller: modelController,
                                 keyboardType: TextInputType.text,
                                 decoration: InputDecoration(
-                                  suffixIcon: Icon(Icons.search,color: AppColors.primarycolor,),
+                                  suffixIcon: Icon(
+                                    Icons.search,
+                                    color: AppColors.primarycolor,
+                                  ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(7.0),
                                     borderSide: BorderSide(
@@ -150,65 +215,157 @@ class _VechicleInfoState extends State<VechicleInfo> {
                       ),
                     ),
 
-                    SizedBox(height: 20.h,),
+                    SizedBox(
+                      height: 20.h,
+                    ),
                     //Car card start
 
-                    borderContiner(
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Image.network(
-                                'https://t3.ftcdn.net/jpg/05/40/34/28/360_F_540342803_QwNUPFqwpa2eL27iW5E6WSuBf2OWAIeJ.jpg',
-                                height: 130.h,
-                                width: 200.w,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Toyota Camry',style: TextStyle(fontSize: 18.sp,fontWeight: FontWeight.w500),),
-                                  SizedBox(height: 10.h,),
-                                  Row(
+                    GetBuilder<CarController>(builder: (controller) {
+                      print('model dataaa ==== ${modelController.text}');
+
+                      List filteredData = selectedVehicleType.isNotEmpty
+                          ? controller.cardata
+                              .where(
+                                  (car) => car['type'] == selectedVehicleType)
+                              .toList()
+                          : List.from(controller.cardata);
+
+                      List filteredData2 = modelController.text.isNotEmpty
+                          ? filteredData
+                              .where((car) =>
+                                  car['type'] == selectedVehicleType &&
+                                  car['model'] == modelController.text)
+                              .toList()
+                          : List.from(filteredData);
+
+                      return Container(
+                        height: 260.h,
+                        width: 100.sw,
+                        child: ListView.builder(
+                            itemCount: filteredData2.length,
+                            itemBuilder: (context, index) {
+                              final car = filteredData2[index];
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 15.0),
+                                child: borderContiner(
+                                  child: Column(
                                     children: [
-                                      Icon(Icons.people,color: Colors.grey,),
-                                      SizedBox(width: 5.w,),
-                                      Text('4 Seat',style: TextStyle(color: Colors.grey),)
+                                      Row(
+                                        children: [
+                                          Image.network(
+                                            car['imageURL'],
+                                            height: 100.h,
+                                            width: 200.w,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    car['make'],
+                                                    style: TextStyle(
+                                                        fontSize: 17.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 4.w,
+                                                  ),
+                                                  Text(
+                                                    car['model'],
+                                                    style: TextStyle(
+                                                        fontSize: 17.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 10.h,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.people,
+                                                    color: Colors.grey,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 5.w,
+                                                  ),
+                                                  Text(
+                                                    '${car['seats']} Seat',
+                                                    style: TextStyle(
+                                                        color: Colors.grey),
+                                                  )
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 5.h,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.shopping_bag_rounded,
+                                                    color: Colors.grey,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 5.w,
+                                                  ),
+                                                  Text(
+                                                    '${car['bags']} bags',
+                                                    style: TextStyle(
+                                                        color: Colors.grey),
+                                                  )
+                                                ],
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                      Divider(),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          SizedBox(
+                                            width: 15.w,
+                                          ),
+                                          Text(
+                                            '\$${car['rates']['hourly']} / Hour',
+                                            style:
+                                                TextStyle(color: Colors.grey),
+                                          ),
+                                          Spacer(),
+                                          Text(
+                                            '\$${car['rates']['daily']} / Day',
+                                            style:
+                                                TextStyle(color: Colors.grey),
+                                          ),
+                                          Spacer(),
+                                          Text(
+                                            '\$${car['rates']['weekly']} / Week',
+                                            style:
+                                                TextStyle(color: Colors.grey),
+                                          ),
+                                          SizedBox(
+                                            width: 15.w,
+                                          ),
+                                        ],
+                                      ),
                                     ],
                                   ),
-                                  SizedBox(height: 5.h,),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.shopping_bag_rounded,color: Colors.grey,),
-                                      SizedBox(width: 5.w,),
-                                      Text('4 Seat',style: TextStyle(color: Colors.grey),)
-                                    ],
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                            SizedBox(width: 15.w,),
-                              Text('\$15 / Hour',style: TextStyle(color: Colors.grey),),
-                              Spacer(),
-                              Text('\$70 / Day',style: TextStyle(color: Colors.grey),),
-                              Spacer(),
-                              Text('\$250 / Week',style: TextStyle(color: Colors.grey),),
-                              SizedBox(width: 15.w,),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
+                                ),
+                              );
+                            }),
+                      );
+                    }),
                   ],
                 ),
               ),
-
               SizedBox(
-                height: 100.h,
+                height: 30.h,
               ),
               Center(
                 child: SizedBox(
