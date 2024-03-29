@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import '../../Model/reservation_model.dart';
 import '../utils/app_colors.dart';
 import '../widget/BorderContiner.dart';
 import '../widget/inputtitle.dart';
@@ -28,6 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
   DateTime _pickupDateTime = DateTime.now();
   DateTime _returnDateTime = DateTime.now();
   String _durationText = '';
+  List<ReservationModel> reservationList = [];
+
 
   Future<void> _selectPickupDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -80,6 +83,13 @@ class _HomeScreenState extends State<HomeScreen> {
       _calculateDuration();
     }
   }
+
+  ReservationModel reservationModel = ReservationModel(
+      reservation_id: '',
+      pickupdate: DateTime.now(),
+      returndate: DateTime.now(),
+      duration: '',
+      discount: '');
 
   Future<void> _selectReturnTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
@@ -442,7 +452,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(
                           height: 35.h,
                           child: TextFormField(
-                            controller: reservation_id,
+                            controller: discount,
                             keyboardType: TextInputType.text,
                             decoration: InputDecoration(
                               focusedBorder: OutlineInputBorder(
@@ -475,7 +485,27 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: 150.w,
                     child: ElevatedButton(
                         onPressed: () {
-                          Get.to(CustomerInformation());
+                          if (reservation_id.text == '') {
+                            Get.snackbar(
+                                'Warning', 'Please Fill up Reservation ID');
+                          } else if (!selectedpickup) {
+                            Get.snackbar(
+                                'Warning', 'Please Fill up pickup date');
+                          } else if (!selectedreturn) {
+                            Get.snackbar(
+                                'Warning', 'Please Fill up return date');
+                          } else {
+                            ReservationModel reservationModel = ReservationModel(
+                              reservation_id: reservation_id.text.trim(),
+                              pickupdate: _pickupDateTime,
+                              returndate: _returnDateTime,
+                              duration: _durationText,
+                              discount: discount.text.trim(),
+                            );
+                            reservationList.add(reservationModel);
+                            print('reservation data ===== $reservationList');
+                            Get.to(CustomerInformation(reservationList:reservationList));
+                          }
                         },
                         child: Text('Next'))),
               )
