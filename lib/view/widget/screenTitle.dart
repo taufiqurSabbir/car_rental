@@ -23,7 +23,7 @@ class _ScreenTitleState extends State<ScreenTitle> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 50.h,),
+          SizedBox(height: 10.h,),
           Text(widget.title,style: TextStyle(fontSize: 18.sp,fontWeight: FontWeight.w600)),
           SizedBox(height: 5.h,),
           Container(height: 1.h,width: 100.sw,color: AppColors.primarycolor)
