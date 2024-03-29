@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../Model/customerModel.dart';
+import '../../Model/reservation_model.dart';
 import '../utils/app_colors.dart';
 import '../widget/BorderContiner.dart';
 import '../widget/inputtitle.dart';
@@ -9,7 +11,10 @@ import '../widget/screenTitle.dart';
 import 'AdditionalCharge.dart';
 
 class VechicleInfo extends StatefulWidget {
-  const VechicleInfo({Key? key}) : super(key: key);
+  const VechicleInfo({Key? key, required this.reservationList, required this.customerInfo}) : super(key: key);
+
+  final List<ReservationModel> reservationList;
+  final List<CustomerInfo> customerInfo;
 
   @override
   State<VechicleInfo> createState() => _VechicleInfoState();
