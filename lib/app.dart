@@ -4,6 +4,9 @@ import 'package:taufiq_car_rental/view/screens/home.dart';
 import 'package:get/get.dart';
 import 'package:taufiq_car_rental/view/utils/app_colors.dart';
 
+import 'controller/car_controller.dart';
+import 'controller/car_type_controller.dart';
+
 class Car_Rental extends StatefulWidget {
   static GlobalKey<ScaffoldState> globalKey = GlobalKey();
   const Car_Rental({super.key});
@@ -39,5 +42,8 @@ class _Car_RentalState extends State<Car_Rental> {
 
 class ControllerBinding extends Bindings {
   @override
-  void dependencies() {}
+  void dependencies() {
+    Get.put(CarController());
+    Get.put(CarTypeController());
+  }
 }
