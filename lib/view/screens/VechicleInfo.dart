@@ -70,6 +70,7 @@ class _VechicleInfoState extends State<VechicleInfo> {
                               child: TextFormField(
                                 keyboardType: TextInputType.text,
                                 decoration: InputDecoration(
+
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(7.0),
                                     borderSide: BorderSide(
@@ -112,6 +113,7 @@ class _VechicleInfoState extends State<VechicleInfo> {
                               child: TextFormField(
                                 keyboardType: TextInputType.text,
                                 decoration: InputDecoration(
+                                  suffixIcon: Icon(Icons.search,color: AppColors.primarycolor,),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(7.0),
                                     borderSide: BorderSide(
