@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../utils/app_colors.dart';
+import '../widget/BorderContiner.dart';
 import '../widget/inputtitle.dart';
 import '../widget/screenTitle.dart';
 import 'AdditionalCharge.dart';
@@ -48,10 +49,7 @@ class _VechicleInfoState extends State<VechicleInfo> {
                 padding: const EdgeInsets.only(left: 15, right: 15),
                 child: Column(
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(width: 1, color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(10)),
+                    borderContiner(
                       child: Padding(
                         padding:
                             const EdgeInsets.only(top: 20, left: 15.0, right: 15),
@@ -150,12 +148,7 @@ class _VechicleInfoState extends State<VechicleInfo> {
                     SizedBox(height: 20.h,),
                     //Car card start
 
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            width: 1, color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
+                    borderContiner(
                       child: Column(
                         children: [
                           Row(
