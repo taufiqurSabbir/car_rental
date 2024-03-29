@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../utils/app_colors.dart';
+import '../widget/BorderContiner.dart';
 import '../widget/inputtitle.dart';
 import '../widget/screenTitle.dart';
 import 'VechicleInfo.dart';
@@ -46,10 +47,7 @@ class _CustomerInformationState extends State<CustomerInformation> {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 15, right: 15),
-                child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(10)),
+                child: borderContiner(
                   child: Padding(
                     padding:
                         const EdgeInsets.only(top: 20, left: 15.0, right: 15),
