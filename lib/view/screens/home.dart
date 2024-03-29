@@ -117,6 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              SizedBox(height: 40.h,),
               ScreenTitle(
                 title: 'Reservation Details',
               ),
@@ -444,7 +445,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 30.h,
                           width: 150.w,
                           child: ElevatedButton(onPressed: (){
-                            Get.to(Customer_Information());
+                            Get.to(CustomerInformation());
                           }, child: Text('Next'))),
                     )
           
