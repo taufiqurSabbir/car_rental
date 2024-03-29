@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../utils/app_colors.dart';
 import '../widget/inputtitle.dart';
 import '../widget/screenTitle.dart';
+import 'AdditionalCharge.dart';
 
 class VechicleInfo extends StatefulWidget {
   const VechicleInfo({Key? key}) : super(key: key);
@@ -217,7 +218,7 @@ class _VechicleInfoState extends State<VechicleInfo> {
                     width: 150.w,
                     child: ElevatedButton(
                         onPressed: () {
-                          Get.to(VechicleInfo());
+                          Get.to(AdditionalCharge());
                         },
                         child: Text('Next'))),
               )
