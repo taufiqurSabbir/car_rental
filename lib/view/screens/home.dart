@@ -30,6 +30,9 @@ class _HomeScreenState extends State<HomeScreen> {
   DateTime _returnDateTime = DateTime.now();
   String _durationText = '';
   List<ReservationModel> reservationList = [];
+  int ? week;
+  int ? day;
+
 
 
   Future<void> _selectPickupDate(BuildContext context) async {
@@ -88,8 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
       reservation_id: '',
       pickupdate: DateTime.now(),
       returndate: DateTime.now(),
-      duration: '',
-      discount: '');
+      discount: '', week:0, day:0 );
 
   Future<void> _selectReturnTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
@@ -118,7 +120,10 @@ class _HomeScreenState extends State<HomeScreen> {
     int remainingDays = duration.inDays % 7;
     setState(() {
       _durationText = '$weeks weeks and $remainingDays days';
+      week = weeks;
+      day = remainingDays;
     });
+    print('count ${week} count ${day}');
   }
 
   @override
@@ -499,11 +504,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               reservation_id: reservation_id.text.trim(),
                               pickupdate: _pickupDateTime,
                               returndate: _returnDateTime,
-                              duration: _durationText,
-                              discount: discount.text.trim(),
+
+                              discount: discount.text.trim(), week: week ?? 0, day: day ?? 0,
                             );
                             reservationList.add(reservationModel);
-                            print('reservation data ===== $reservationList');
+                            print('reservation data ===== ${reservationList}');
                             Get.to(CustomerInformation(reservationList:reservationList));
                           }
                         },
