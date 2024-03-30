@@ -212,7 +212,7 @@ class _CustomerInformationState extends State<CustomerInformation> {
                             height: 35.h,
                             child: TextFormField(
                               controller: phoneController,
-                              keyboardType: TextInputType.text,
+                              keyboardType: TextInputType.number,
                               decoration: InputDecoration(
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(7.0),
