@@ -1,19 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../Model/customerModel.dart';
+import '../../Model/reservation_model.dart';
 import '../utils/app_colors.dart';
 import '../widget/BorderContiner.dart';
 import '../widget/screenTitle.dart';
 import '../widget/summary_item.dart';
 
 class Summary extends StatefulWidget {
-  const Summary({super.key});
+  const Summary(
+      {super.key,
+      required this.reservationList,
+      required this.selectedcar,
+      required this.customerInfo,
+      required this.selectedaditional});
 
+  final List<ReservationModel> reservationList;
+  final List<dynamic> selectedcar;
+  final List<CustomerInfo> customerInfo;
+  final List<Map<String, dynamic>> selectedaditional;
   @override
   State<Summary> createState() => _SummaryState();
 }
 
 class _SummaryState extends State<Summary> {
+  late int countweek;
+  late int countday;
+  late int additionalcharge;
+  late int carweekprice;
+  late int cardayprice;
+  late int finalweekprice;
+  late int finaldayprice;
+  late int totalprice;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    countweek = widget.reservationList.first.week;
+    countday = widget.reservationList.first.day;
+    additionalcharge =
+        double.parse(widget.selectedaditional.first['price']).toInt();
+    carweekprice = widget.selectedcar.first['rates']['weekly'] as int;
+    cardayprice = widget.selectedcar.first['rates']['daily'] as int;
+    finalweekprice = countweek * carweekprice;
+    finaldayprice = countday * cardayprice;
+    totalprice = finalweekprice + finaldayprice + additionalcharge;
+
+    print('reservation dataaa ==== ${widget.reservationList.first.week}');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +74,7 @@ class _SummaryState extends State<Summary> {
             child: Column(
               children: [
                 //Reservation section start
-          
+
                 SizedBox(
                   height: 10.h,
                 ),
@@ -55,21 +92,23 @@ class _SummaryState extends State<Summary> {
                       ),
                       summaryItem(
                         title: 'Reservation ID',
-                        value: '101',
+                        value: widget.reservationList.first.reservation_id,
                       ),
                       SizedBox(
                         height: 15.h,
                       ),
                       summaryItem(
                         title: 'Pickup Date',
-                        value: '11:00 Am, 21March 2024',
+                        value:
+                            widget.reservationList.first.pickupdate.toString(),
                       ),
                       SizedBox(
                         height: 15.h,
                       ),
                       summaryItem(
                         title: 'Dropoff Date',
-                        value: '11:00 Am, 21March 2024',
+                        value:
+                            widget.reservationList.first.returndate.toString(),
                       ),
                       SizedBox(
                         height: 5.h,
@@ -78,9 +117,9 @@ class _SummaryState extends State<Summary> {
                   ),
                 ),
                 //Reservation section end
-          
+
                 //customer section start
-          
+
                 SizedBox(
                   height: 10.h,
                 ),
@@ -98,28 +137,28 @@ class _SummaryState extends State<Summary> {
                       ),
                       summaryItem(
                         title: 'First Name',
-                        value: 'Taufiqur',
+                        value: widget.customerInfo.first.firstName,
                       ),
                       SizedBox(
                         height: 15.h,
                       ),
                       summaryItem(
                         title: 'Last name',
-                        value: 'Rahman',
+                        value: widget.customerInfo.first.lastName,
                       ),
                       SizedBox(
                         height: 15.h,
                       ),
                       summaryItem(
                         title: 'Email',
-                        value: 'taufiqur2511@gmail.com',
+                        value: widget.customerInfo.first.email,
                       ),
                       SizedBox(
                         height: 15.h,
                       ),
                       summaryItem(
                         title: 'phone',
-                        value: '01792945445',
+                        value: widget.customerInfo.first.phone,
                       ),
                       SizedBox(
                         height: 5.h,
@@ -127,14 +166,11 @@ class _SummaryState extends State<Summary> {
                     ],
                   ),
                 ),
-          
-          
+
                 //customer section end
-          
-          
-          
+
                 //vehicle section start
-          
+
                 SizedBox(
                   height: 10.h,
                 ),
@@ -152,14 +188,14 @@ class _SummaryState extends State<Summary> {
                       ),
                       summaryItem(
                         title: 'Vehicle Type',
-                        value: 'Sedan',
+                        value: widget.selectedcar.first['type'],
                       ),
                       SizedBox(
                         height: 15.h,
                       ),
                       summaryItem(
                         title: 'Vehicle Model',
-                        value: 'Toyota Camry',
+                        value: widget.selectedcar.first['model'],
                       ),
                       SizedBox(
                         height: 5.h,
@@ -168,10 +204,9 @@ class _SummaryState extends State<Summary> {
                   ),
                 ),
                 //vehicle section end
-          
-          
+
                 //Charge Summary
-          
+
                 SizedBox(
                   height: 10.h,
                 ),
@@ -184,25 +219,40 @@ class _SummaryState extends State<Summary> {
                 ),
                 Container(
                   decoration: BoxDecoration(
-                    color: AppColors.primarycolor.withOpacity(0.1),
-                    border: Border.all(width: 1,color: AppColors.primarycolor),
-                    borderRadius: BorderRadius.circular(10)
-                  ),
+                      color: AppColors.primarycolor.withOpacity(0.1),
+                      border:
+                          Border.all(width: 1, color: AppColors.primarycolor),
+                      borderRadius: BorderRadius.circular(10)),
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 12.0,right: 12,bottom: 15),
+                    padding: const EdgeInsets.only(
+                        left: 12.0, right: 12, bottom: 15),
                     child: Column(
                       children: [
-                        SizedBox(height: 20.h,),
+                        SizedBox(
+                          height: 20.h,
+                        ),
                         Row(
                           children: [
-                            SizedBox(width: 10.w,),
-                            Text('Charge',style: TextStyle(fontWeight: FontWeight.bold),),
+                            SizedBox(
+                              width: 10.w,
+                            ),
+                            Text(
+                              'Charge',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             Spacer(),
-                            Text('Total',style: TextStyle(fontWeight: FontWeight.bold),),
-                            SizedBox(width: 10.w,),
+                            Text(
+                              'Total',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              width: 10.w,
+                            ),
                           ],
                         ),
-                        SizedBox(height: 10.h,),
+                        SizedBox(
+                          height: 10.h,
+                        ),
                         Container(
                           height: 2.h,
                           width: 100.sw,
@@ -212,35 +262,43 @@ class _SummaryState extends State<Summary> {
                           height: 5.h,
                         ),
                         summaryItem(
-                          title: 'Weekly (1 week)',
-                          value: '\$250',
+                          title: 'Weekly (${countweek} week) ',
+                          value: '\$${finalweekprice}',
                         ),
                         SizedBox(
                           height: 15.h,
                         ),
                         summaryItem(
-                          title: 'Daily (2 days)',
-                          value: '\$140.00',
+                          title: 'Daily (${countday} day) ',
+                          value: '\$${finaldayprice}',
                         ),
-
                         SizedBox(
                           height: 15.h,
                         ),
                         summaryItem(
-                          title: 'Collision Damage Waiver',
-                          value: '\$9.00',
+                          title: widget.selectedaditional.first['name'],
+                          value: '\$${widget.selectedaditional.first['price']}',
                         ),
                         SizedBox(
                           height: 7.h,
                         ),
-
                         Row(
                           children: [
-                            SizedBox(width: 10.w,),
-                            Text('Net Total',style: TextStyle(fontWeight: FontWeight.bold),),
+                            SizedBox(
+                              width: 10.w,
+                            ),
+                            Text(
+                              'Net Total',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             Spacer(),
-                            Text('\$399',style: TextStyle(fontWeight: FontWeight.bold),),
-                            SizedBox(width: 10.w,),
+                            Text(
+                              '\$${totalprice}',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              width: 10.w,
+                            ),
                           ],
                         ),
                       ],
@@ -248,8 +306,9 @@ class _SummaryState extends State<Summary> {
                   ),
                 ),
 
-                SizedBox(height: 20.h,),
-          
+                SizedBox(
+                  height: 20.h,
+                ),
               ],
             ),
           ),
