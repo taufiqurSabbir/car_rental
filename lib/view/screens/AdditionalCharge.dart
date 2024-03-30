@@ -1,14 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:taufiq_car_rental/Model/customerModel.dart';
 import 'package:taufiq_car_rental/view/utils/app_colors.dart';
 
+import '../../Model/reservation_model.dart';
 import '../widget/BorderContiner.dart';
 import '../widget/screenTitle.dart';
 import 'Summary.dart';
 
 class AdditionalCharge extends StatefulWidget {
-  const AdditionalCharge({Key? key}) : super(key: key);
+  const AdditionalCharge(
+      {Key? key,
+      required this.reservationList,
+      required this.customerInfo,
+      required this.selectedcar})
+      : super(key: key);
+
+  final List<ReservationModel> reservationList;
+  final List<dynamic> selectedcar;
+  final List<CustomerInfo> customerInfo;
 
   @override
   State<AdditionalCharge> createState() => _AdditionalChargeState();
@@ -17,11 +28,14 @@ class AdditionalCharge extends StatefulWidget {
 class _AdditionalChargeState extends State<AdditionalCharge> {
   List<bool> _isCheckedList = [false, false, false];
   String _currText = '';
+  int _selectedIndex = -1;
+
+  List<Map<String, dynamic>> selectedcharge = [];
 
   List<Map<String, dynamic>> options = [
-    {'name': 'Collision Damage Waiver', 'price': '\$9.00'},
-    {'name': 'Liability Insurance', 'price': '\$15.00'},
-    {'name': 'Rental Tax', 'price': '11.5%'},
+    {'name': 'Collision Damage Waiver', 'price': '9.00'},
+    {'name': 'Liability Insurance', 'price': '15.00'},
+    {'name': 'Rental Tax', 'price': '11.5'},
   ];
 
   @override
@@ -55,39 +69,39 @@ class _AdditionalChargeState extends State<AdditionalCharge> {
             Padding(
               padding: const EdgeInsets.only(left: 15, right: 15),
               child: borderContiner(
-                child: Column(
+                child:  Column(
                   children: options.asMap().entries.map((entry) {
                     int index = entry.key;
                     Map<String, dynamic> option = entry.value;
                     String name = option['name'];
                     dynamic price = option['price'];
-                    return Row(
-                      children: [
-                        Checkbox(
-                          value: _isCheckedList[index],
-                          onChanged: (val) {
-                            setState(() {
-                              _isCheckedList[index] = val ?? false;
-                              if (val == true) {
-                                _currText = name;
-                              }
-                            });
-                          },
-                        ),
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Text('$name',style: TextStyle(fontSize: 14.sp),),
-                              Spacer(),
-                              Text('$price',style: TextStyle(fontSize: 14.sp),),
-                              SizedBox(width: 30.w,),
-                            ],
+                    return RadioListTile<int>(
+                      title: Row(
+                        children: [
+                          Text(
+                            '$name',
+                            style: TextStyle(fontSize: 14.sp),
                           ),
-                        ),
-                      ],
+                          Spacer(),
+                          Text(
+                            '$price',
+                            style: TextStyle(fontSize: 14.sp),
+                          ),
+                        ],
+                      ),
+                      value: index,
+                      groupValue: _selectedIndex,
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedIndex = value!;
+                          _currText = name;
+                          selectedcharge.clear();
+                          selectedcharge.add({'name': name, 'price': price});
+                          print('selected additional ==== $selectedcharge');
+                        });
+                      },
                     );
                   }).toList(),
-
                 ),
               ),
             ),
@@ -100,7 +114,12 @@ class _AdditionalChargeState extends State<AdditionalCharge> {
                   width: 150.w,
                   child: ElevatedButton(
                       onPressed: () {
-                        Get.to(Summary());
+                        Get.to(Summary(
+                          reservationList: widget.reservationList,
+                          selectedcar: widget.selectedcar,
+                          customerInfo: widget.customerInfo,
+                          selectedaditional: selectedcharge,
+                        ));
                       },
                       child: Text('Next'))),
             )
