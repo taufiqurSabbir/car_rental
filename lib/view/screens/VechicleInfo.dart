@@ -33,6 +33,8 @@ class _VechicleInfoState extends State<VechicleInfo> {
   CarController carController = Get.put(CarController());
   final TextEditingController modelController = TextEditingController();
 
+  List<dynamic> selectedCar = [];
+
   @override
   void initState() {
     super.initState();
@@ -175,13 +177,18 @@ class _VechicleInfoState extends State<VechicleInfo> {
                               child: TextFormField(
                                 onSaved: (value) {
                                   modelController.text = value!;
+                                  setState(() {});
                                 },
+                                onChanged: (value) {},
                                 controller: modelController,
                                 keyboardType: TextInputType.text,
                                 decoration: InputDecoration(
-                                  suffixIcon: Icon(
-                                    Icons.search,
+                                  suffixIcon: IconButton(
                                     color: AppColors.primarycolor,
+                                    onPressed: () {
+                                      setState(() {});
+                                    },
+                                    icon: Icon(Icons.search),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(7.0),
@@ -197,12 +204,6 @@ class _VechicleInfoState extends State<VechicleInfo> {
                                     ),
                                   ),
                                 ),
-                                validator: (String? value) {
-                                  if (value?.isEmpty ?? true) {
-                                    return 'Enter your Reservation Id';
-                                  }
-                                  return null;
-                                },
                               ),
                             ),
                             SizedBox(
@@ -245,116 +246,145 @@ class _VechicleInfoState extends State<VechicleInfo> {
                             itemCount: filteredData2.length,
                             itemBuilder: (context, index) {
                               final car = filteredData2[index];
+                              final bool isSelected = selectedCar.contains(car);
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 15.0),
-                                child: borderContiner(
-                                  child: Column(
-                                    children: [
-                                      Row(
+                                child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      if (isSelected) {
+                                        selectedCar.remove(car);
+                                      } else {
+                                        selectedCar.add(car);
+                                        print('Navigating to AdditionalCharge page...');
+                                        Get.to(AdditionalCharge(
+                                          reservationList: widget.reservationList,
+                                          customerInfo: widget.customerInfo,
+                                          selectedcar: selectedCar,
+                                        ));
+                                      }
+                                    });
+                                    print('Car selected: $selectedCar');
+                                  },
+
+                                  child: borderContiner(
+                                    child: Container(
+                                      color: isSelected
+                                          ? AppColors.primarycolor
+                                              .withOpacity(0.25)
+                                          : Colors.white,
+                                      child: Column(
                                         children: [
-                                          Image.network(
-                                            car['imageURL'],
-                                            height: 100.h,
-                                            width: 200.w,
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                          Row(
                                             children: [
-                                              Row(
+                                              Image.network(
+                                                car['imageURL'],
+                                                height: 100.h,
+                                                width: 200.w,
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(
-                                                    car['make'],
-                                                    style: TextStyle(
-                                                        fontSize: 17.sp,
-                                                        fontWeight:
-                                                            FontWeight.w500),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        car['make'],
+                                                        style: TextStyle(
+                                                            fontSize: 17.sp,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 4.w,
+                                                      ),
+                                                      Text(
+                                                        car['model'],
+                                                        style: TextStyle(
+                                                            fontSize: 17.sp,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                    ],
                                                   ),
                                                   SizedBox(
-                                                    width: 4.w,
+                                                    height: 10.h,
                                                   ),
-                                                  Text(
-                                                    car['model'],
-                                                    style: TextStyle(
-                                                        fontSize: 17.sp,
-                                                        fontWeight:
-                                                            FontWeight.w500),
+                                                  Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.people,
+                                                        color: Colors.grey,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 5.w,
+                                                      ),
+                                                      Text(
+                                                        '${car['seats']} Seat',
+                                                        style: TextStyle(
+                                                            color: Colors.grey),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 5.h,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons
+                                                            .shopping_bag_rounded,
+                                                        color: Colors.grey,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 5.w,
+                                                      ),
+                                                      Text(
+                                                        '${car['bags']} bags',
+                                                        style: TextStyle(
+                                                            color: Colors.grey),
+                                                      )
+                                                    ],
                                                   ),
                                                 ],
+                                              )
+                                            ],
+                                          ),
+                                          Divider(),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              SizedBox(
+                                                width: 15.w,
+                                              ),
+                                              Text(
+                                                '\$${car['rates']['hourly']} / Hour',
+                                                style: TextStyle(
+                                                    color: Colors.grey),
+                                              ),
+                                              Spacer(),
+                                              Text(
+                                                '\$${car['rates']['daily']} / Day',
+                                                style: TextStyle(
+                                                    color: Colors.grey),
+                                              ),
+                                              Spacer(),
+                                              Text(
+                                                '\$${car['rates']['weekly']} / Week',
+                                                style: TextStyle(
+                                                    color: Colors.grey),
                                               ),
                                               SizedBox(
-                                                height: 10.h,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.people,
-                                                    color: Colors.grey,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 5.w,
-                                                  ),
-                                                  Text(
-                                                    '${car['seats']} Seat',
-                                                    style: TextStyle(
-                                                        color: Colors.grey),
-                                                  )
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                height: 5.h,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.shopping_bag_rounded,
-                                                    color: Colors.grey,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 5.w,
-                                                  ),
-                                                  Text(
-                                                    '${car['bags']} bags',
-                                                    style: TextStyle(
-                                                        color: Colors.grey),
-                                                  )
-                                                ],
+                                                width: 15.w,
                                               ),
                                             ],
-                                          )
-                                        ],
-                                      ),
-                                      Divider(),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          SizedBox(
-                                            width: 15.w,
-                                          ),
-                                          Text(
-                                            '\$${car['rates']['hourly']} / Hour',
-                                            style:
-                                                TextStyle(color: Colors.grey),
-                                          ),
-                                          Spacer(),
-                                          Text(
-                                            '\$${car['rates']['daily']} / Day',
-                                            style:
-                                                TextStyle(color: Colors.grey),
-                                          ),
-                                          Spacer(),
-                                          Text(
-                                            '\$${car['rates']['weekly']} / Week',
-                                            style:
-                                                TextStyle(color: Colors.grey),
-                                          ),
-                                          SizedBox(
-                                            width: 15.w,
                                           ),
                                         ],
                                       ),
-                                    ],
+                                    ),
                                   ),
                                 ),
                               );
@@ -373,7 +403,11 @@ class _VechicleInfoState extends State<VechicleInfo> {
                     width: 150.w,
                     child: ElevatedButton(
                         onPressed: () {
-                          Get.to(AdditionalCharge());
+                          Get.to(AdditionalCharge(
+                            reservationList: widget.reservationList,
+                            customerInfo: widget.customerInfo,
+                            selectedcar: selectedCar,
+                          ));
                         },
                         child: Text('Next'))),
               )
