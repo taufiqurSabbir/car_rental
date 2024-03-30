@@ -12,7 +12,7 @@ Taufiq Car Rental is a Flutter application designed to help users rent cars easi
 
 ## Getting Started
 1. Clone this repository to your local machine.
-2. Ensure you have Flutter version 3.16.5 installed. If not, follow the [Flutter installation instructions](https://flutter.dev/docs/get-started/install).
+2. Ensure you have Flutter version `3.16.5`  installed. If not, follow the [Flutter installation instructions](https://flutter.dev/docs/get-started/install).
 3. Open the project in your preferred IDE or code editor.
 4. Run `flutter pub get` to install dependencies.
 5. Connect your device or emulator and run `flutter run` to launch the app.
