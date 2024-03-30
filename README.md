@@ -1,16 +1,36 @@
-# taufiq_car_rental
+# Taufiq Car Rental
 
-A new Flutter project.
+## Description
+Taufiq Car Rental is a Flutter application designed to help users rent cars easily and efficiently.
+
+## Features
+- User authentication
+- Car browsing and selection
+- Booking management
+- Payment processing
+- User profile management
 
 ## Getting Started
+1. Clone this repository to your local machine.
+2. Ensure you have Flutter version 3.16.5 installed. If not, follow the [Flutter installation instructions](https://flutter.dev/docs/get-started/install).
+3. Open the project in your preferred IDE or code editor.
+4. Run `flutter pub get` to install dependencies.
+5. Connect your device or emulator and run `flutter run` to launch the app.
 
-This project is a starting point for a Flutter application.
+## Technologies Used
+- Flutter
+- Dart
+- Rest API
 
-A few resources to get you started if this is your first Flutter project:
+## Contributing
+Contributions are welcome!
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+## Acknowledgements
+- Flutter team for their amazing framework
+- Firebase for providing backend services
+- Icons8 for providing icons
+
+## Contact
+For inquiries or support, please contact [Taufiq](mailto:taufiqur2511@gmail.com).
