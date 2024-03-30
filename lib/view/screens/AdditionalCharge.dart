@@ -84,7 +84,7 @@ class _AdditionalChargeState extends State<AdditionalCharge> {
                           ),
                           Spacer(),
                           Text(
-                            '$price',
+                            '\$ $price',
                             style: TextStyle(fontSize: 14.sp),
                           ),
                         ],
