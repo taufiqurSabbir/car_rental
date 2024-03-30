@@ -403,11 +403,16 @@ class _VechicleInfoState extends State<VechicleInfo> {
                     width: 150.w,
                     child: ElevatedButton(
                         onPressed: () {
-                          Get.to(AdditionalCharge(
-                            reservationList: widget.reservationList,
-                            customerInfo: widget.customerInfo,
-                            selectedcar: selectedCar,
-                          ));
+                          if(selectedCar.isNotEmpty){
+                            Get.to(AdditionalCharge(
+                              reservationList: widget.reservationList,
+                              customerInfo: widget.customerInfo,
+                              selectedcar: selectedCar,
+                            ));
+                          }else{
+                            Get.snackbar('Warning', 'Please select Car');
+                          }
+
                         },
                         child: Text('Next'))),
               )
