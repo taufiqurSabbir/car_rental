@@ -161,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 35.h,
                           child: TextFormField(
                             controller: reservation_id,
-                            keyboardType: TextInputType.text,
+                            keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(7.0),
