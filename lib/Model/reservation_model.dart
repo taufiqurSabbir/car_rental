@@ -2,8 +2,9 @@ class ReservationModel {
   String reservation_id = '';
   DateTime pickupdate = DateTime.now();
   DateTime returndate = DateTime.now();
-  String duration = '';
+  int week = 0;
+  int day = 0;
   String discount = '';
 
-  ReservationModel({required this.reservation_id, required this.pickupdate, required this.returndate, required this.duration,required this.discount});
+  ReservationModel({required this.reservation_id, required this.pickupdate, required this.returndate, required this.week,required this.day,required this.discount});
 }
