@@ -267,7 +267,7 @@ class _CustomerInformationState extends State<CustomerInformation> {
 
                             CustomerData.add(customerInfo);
 
-                            print('customer data ===== $customerInfo');
+                            print('customer data ===== ${CustomerData.length}');
                             Get.to(VechicleInfo(
                               customerInfo: CustomerData,
                               reservationList: widget.reservationList,
